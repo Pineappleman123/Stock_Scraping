@@ -13,4 +13,8 @@ results = soup.find(id="maincontent")
 
 current_price = results.find("h2", class_="intraday__price").find("bg-quote").text
 
+info = results.find("div", class_="group group--elements left").find_all("li", class_="kv__item")
+for info in info:
+    print(info.text)
+
 print("Current price: $" + current_price)
