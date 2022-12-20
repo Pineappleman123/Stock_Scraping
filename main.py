@@ -2,7 +2,7 @@
 # https://www.geeksforgeeks.org/graph-plotting-in-python-set-1/
 # https://www.marketwatch.com/
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import requests
 from bs4 import BeautifulSoup
 
@@ -11,6 +11,8 @@ URL = "https://www.marketwatch.com/investing/stock/" + symbol + "?mod=search_sym
 URL2 = "https://www.marketwatch.com/investing/stock/" + symbol + "/download-data?mod=mw_quote_tab"
 page = requests.get(URL)
 historical = requests.get(URL2)
+
+
 
 soup = BeautifulSoup(page.content, "html.parser")
 soup2 = BeautifulSoup(historical.content, "html.parser")
@@ -31,12 +33,28 @@ try:
 except:
     print("Incorrect stock symbol")
 
+x = []
+columns = ["OPEN", "HIGH", "LOW", "CLOSE", "VOLUME"]
 data = results2.find("tbody", class_="table__body row-hover")
 rows = data.find_all("tr", class_="table__row")
 row_data = {}
 for row in rows:
     date = row.find("div", class_="cell__content u-secondary").text.strip()
-    values = list(value.text.strip() for value in row.find_all("td", class_="overflow__cell")[1:])
+    x.append(date)
+    values = list((columns[i], value.text.strip()) for (i, value) in enumerate(row.find_all("td", class_="overflow__cell")[1:]))
     row_data[date] = values
 
-print(row_data)
+
+for i in range(len(columns) - 1):
+    y = []
+    for date in x:      
+        label = row_data[date][i][0]
+        y.append(float(row_data[date][i][1][1:]))
+    plt.plot(x, y, label=label)
+
+plt.xlabel("DATE")
+plt.ylabel("VALUE IN $")
+
+plt.legend()
+plt.show()
+
