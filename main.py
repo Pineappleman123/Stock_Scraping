@@ -44,6 +44,7 @@ for row in rows:
     values = list((columns[i], value.text.strip()) for (i, value) in enumerate(row.find_all("td", class_="overflow__cell")[1:]))
     row_data[date] = values
 
+x.reverse()
 
 for i in range(len(columns) - 1):
     y = []
@@ -51,6 +52,7 @@ for i in range(len(columns) - 1):
         label = row_data[date][i][0]
         y.append(float(row_data[date][i][1][1:]))
     plt.plot(x, y, label=label)
+
 
 plt.xlabel("DATE")
 plt.ylabel("VALUE IN $")
