@@ -30,33 +30,33 @@ try:
         print()
 
     print("Current price: $" + current_price)
+
+    x = []
+    columns = ["OPEN", "HIGH", "LOW", "CLOSE", "VOLUME"]
+    data = results2.find("tbody", class_="table__body row-hover")
+    rows = data.find_all("tr", class_="table__row")
+    row_data = {}
+    for row in rows:
+        date = row.find("div", class_="cell__content u-secondary").text.strip()
+        x.append(date)
+        values = list((columns[i], value.text.strip()) for (i, value) in enumerate(row.find_all("td", class_="overflow__cell")[1:]))
+        row_data[date] = values
+
+    x.reverse()
+
+    for i in range(len(columns) - 1):
+        y = []
+        for date in x:      
+            label = row_data[date][i][0]
+            y.append(float(row_data[date][i][1][1:]))
+        plt.plot(x, y, label=label)
+
+
+    plt.xlabel("DATE")
+    plt.ylabel("VALUE IN $")
+
+    plt.legend()
+    plt.show()
+
 except:
     print("Incorrect stock symbol")
-
-x = []
-columns = ["OPEN", "HIGH", "LOW", "CLOSE", "VOLUME"]
-data = results2.find("tbody", class_="table__body row-hover")
-rows = data.find_all("tr", class_="table__row")
-row_data = {}
-for row in rows:
-    date = row.find("div", class_="cell__content u-secondary").text.strip()
-    x.append(date)
-    values = list((columns[i], value.text.strip()) for (i, value) in enumerate(row.find_all("td", class_="overflow__cell")[1:]))
-    row_data[date] = values
-
-x.reverse()
-
-for i in range(len(columns) - 1):
-    y = []
-    for date in x:      
-        label = row_data[date][i][0]
-        y.append(float(row_data[date][i][1][1:]))
-    plt.plot(x, y, label=label)
-
-
-plt.xlabel("DATE")
-plt.ylabel("VALUE IN $")
-
-plt.legend()
-plt.show()
-
